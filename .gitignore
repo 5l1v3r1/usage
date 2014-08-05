@@ -1,0 +1,8 @@
+.idea
+/build/bin
+/build/phingext
+/build/tools
+/build/buildlang
+
+usage/include.php
+usage/version.txt

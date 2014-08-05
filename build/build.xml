@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="Usage" description="Usage Statistics for Joomla!" default="all" >
+	<property file="./build.properties" />
+
+	<!-- Default properties, set only if not already assigned in the build.properties file -->
+	<property name="dirs.root" value=".." />
+	<property name="dirs.library" value="../usage" />
+	<property name="dirs.release" value="../release" />
+	<property name="version" value="dev" />
+
+	<property name="dirs.bin" value="bin" />
+	<property name="dirs.bin.libxml" value="${dirs.bin}/libxml" />
+	<property name="dirs.bin.fop" value="${dirs.bin}/fop" />
+	<property name="dirs.bin.dbxsl" value="${dirs.bin}/dbxsl" />
+	<property name="dirs.bin.release" value="../release" />
+	<property name="dirs.documentation" value="../documentation" />
+
+	<taskdef name="zipme" classname="phingext.ZipmeTask" />
+	<taskdef name="gitversion" classname="phingext.GitVersionTask" />
+	<taskdef name="gitdate" classname="phingext.GitDateTask" />
+
+	<!--
+	====================================================================================================
+	Tasks - General
+	====================================================================================================
+	-->
+
+	<target name="all" description="Makes everything"
+		depends="dev-release">
+	</target>
+
+	<target name="git" description="Makes only the library package"
+		depends="new-release,setup-properties,library-package">
+	</target>
+
+	<target name="dev-release" description="Makes only packages, not the documentation"
+		depends="git">
+	</target>
+
+	<target name="new-release" description="Create the release directory afresh">
+		<!-- Recreate the release directory -->
+		<delete dir="${dirs.release}" quiet="yes" includeemptydirs="false" />
+		<mkdir dir="${dirs.release}" />
+	</target>
+
+	<target name="setup-properties" description="Set up version and build properties">
+		<!-- Initialize the git.date timestamp -->
+		<gitdate workingcopy="${dirs.root}" format="Y-m-d H:i:s" propertyname="git.date" />
+
+		<!-- Initialize the version if it's not set -->
+		<if>
+			<equals arg1="${version}" arg2="dev" />
+			<then>
+				<gitversion workingcopy="${dirs.root}" propertyname="git.lastrevision" />
+				<gitdate workingcopy="${dirs.root}" propertyname="git.timestamp" />
+				<!--<property name="version" value="rev${git.lastrevision}" override="true" />-->
+				<property name="version" value="rev${git.lastrevision}-${git.timestamp}" override="true" />
+			</then>
+		</if>
+	</target>
+
+	<!--
+	====================================================================================================
+	Tasks - Joomla! packages
+	====================================================================================================
+	-->
+
+	<target name="library-package" description="FOF Installation Package for Joomla! 1.6+"
+		depends="new-release,setup-properties">
+
+		<!-- Generate XML file for Usage -->
+		<copy file="./templates/lib_usage.xml" tofile="${dirs.root}/lib_usage.xml" overwrite="true">
+			<filterchain>
+				<replacetokens begintoken="##" endtoken="##">
+					<token key="DATE" value="${git.date}" />
+					<token key="VERSION" value="${version}" />
+				</replacetokens>
+			</filterchain>
+		</copy>
+		<copy file="${dirs.root}/lib_usage.xml" tofile="${dirs.library}/lib_usage.xml" overwrite="true" />
+
+		<!-- Generate version.txt file for FOF -->
+		<copy file="./templates/version.txt" tofile="${dirs.library}/version.txt" overwrite="true">
+			<filterchain>
+				<replacetokens begintoken="##" endtoken="##">
+					<token key="DATE" value="${git.date}" />
+					<token key="VERSION" value="${version}" />
+				</replacetokens>
+			</filterchain>
+		</copy>
+
+
+		<!-- Generate include file for Usage -->
+		<copy file="./templates/include.php" tofile="${dirs.library}/include.php" overwrite="true">
+			<filterchain>
+				<replacetokens begintoken="##" endtoken="##">
+					<token key="DATE" value="${git.date}" />
+					<token key="VERSION" value="${version}" />
+				</replacetokens>
+			</filterchain>
+		</copy>
+
+		<!-- Create the package -->
+		<zipme basedir="${dirs.library}" prefix="usage/" destfile="${dirs.release}/lib_usage-${version}.zip" includeemptydirs="true">
+			<fileset dir="${dirs.library}" id="library">
+				<include name="**" />
+			</fileset>
+		</zipme>
+		<zipme basedir="${dirs.root}" destfile="${dirs.release}/lib_usage-${version}.zip" includeemptydirs="true">
+			<fileset dir="${dirs.root}">
+				<include name="lib_usage.xml" />
+			</fileset>
+		</zipme>
+
+		<!-- Clean up -->
+		<delete>
+			<fileset dir="${dirs.root}">
+				<include name="lib_usage.xml" />
+			</fileset>
+		</delete>
+	</target>
+
+	<!--
+	====================================================================================================
+	Tasks - Project management
+	====================================================================================================
+	-->
+    <target name="link" description="Internal linker">
+        <exec command="php ../buildfiles/tools/link.php ${application.startdir}/.." dir="${application.startdir}/.." passthru="true" />
+        <!--<exec command="php ../buildfiles/tools/langlink.php ${application.startdir}/.." dir="${application.startdir}/.." passthru="true" />-->
+    </target>
+</project>
