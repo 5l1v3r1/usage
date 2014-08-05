@@ -1,13 +1,13 @@
 <?php
 
-defined('USAGE_INCLUDED') or die();
+defined('USAGEDATA_INCLUDED') or die();
 
-class UsageAutoloader
+class UsagedataAutoloader
 {
 	/**
 	 * An instance of this autoloader
 	 *
-	 * @var   UsageAutoloader
+	 * @var   UsagedataAutoloader
 	 */
 	public static $autoloader = null;
 
@@ -21,7 +21,7 @@ class UsageAutoloader
 	/**
 	 * Initialise this autoloader
 	 *
-	 * @return  UsageAutoloader
+	 * @return  UsagedataAutoloader
 	 */
 	public static function init()
 	{
@@ -38,9 +38,9 @@ class UsageAutoloader
 	 */
 	public function __construct()
 	{
-		self::$fofPath = realpath(__DIR__ . '/../');
+		self::$usagePath = realpath(__DIR__ . '/../');
 
-		spl_autoload_register(array($this,'autoload_usage_core'));
+		spl_autoload_register(array($this,'autoload_usagedata_core'));
 	}
 
 	/**
@@ -50,16 +50,16 @@ class UsageAutoloader
 	 *
 	 * @return  void
 	 */
-	public function autoload_usage_core($class_name)
+	public function autoload_usagedata_core($class_name)
 	{
 		// Make sure the class has a Usage prefix
-		if (substr($class_name, 0, 5) != 'Usage')
+		if (substr($class_name, 0, 9) != 'Usagedata')
 		{
 			return;
 		}
 
 		// Remove the prefix
-		$class = substr($class_name, 5);
+		$class = substr($class_name, 9);
 
 		// Change from camel cased (e.g. ViewHtml) into a lowercase array (e.g. 'view','html')
 		$class = preg_replace('/(\s)+/', '_', $class);
@@ -67,7 +67,7 @@ class UsageAutoloader
 		$class = explode('_', $class);
 
 		// First try finding in structured directory format (preferred)
-		$path = self::$fofPath . '/' . implode('/', $class) . '.php';
+		$path = self::$usagePath . '/' . implode('/', $class) . '.php';
 
 		if (@file_exists($path))
 		{
@@ -80,7 +80,7 @@ class UsageAutoloader
 		{
 			reset($class);
 			$lastPart = end($class);
-			$path = self::$fofPath . '/' . implode('/', $class) . '/' . $lastPart . '.php';
+			$path = self::$usagePath . '/' . implode('/', $class) . '/' . $lastPart . '.php';
 
 			if (@file_exists($path))
 			{
@@ -92,7 +92,7 @@ class UsageAutoloader
 
 		if (!class_exists($class_name, false))
 		{
-			$path = self::$fofPath . '/legacy/' . implode('/', $class) . '.php';
+			$path = self::$usagePath . '/legacy/' . implode('/', $class) . '.php';
 
 			if (@file_exists($path))
 			{

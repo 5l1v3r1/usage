@@ -6,6 +6,6 @@
 
 release/
 
-usage/lib_usage.xml
-usage/include.php
-usage/version.txt
+usagedata/lib_usagedata.xml
+usagedata/include.php
+usagedata/version.txt

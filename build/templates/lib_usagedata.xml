@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <extension type="library" version="2.5" method="upgrade">
   <name>Usage Statistics</name>
-	<libraryname>usage</libraryname>
+	<libraryname>usagedata</libraryname>
 	<description>Utility library that will allow you to track down and save statistics of your software</description>
 	<creationDate>##DATE##</creationDate>
 	<author>Davide Tampellini / FabbricaBinaria</author>
@@ -11,7 +11,7 @@
 	<license>GNU GPLv3 or later</license>
 	<version>##VERSION##</version>
 
-	<files folder="usage">
+	<files folder="usagedata">
 		<folder>autoloader</folder>
 
 		<file>LICENSE.txt</file>

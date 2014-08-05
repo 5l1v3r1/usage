@@ -2,11 +2,11 @@
 
 defined('_JEXEC') or die();
 
-if (!defined('USAGE_INCLUDED'))
+if (!defined('USAGEDATA_INCLUDED'))
 {
-    define('USAGE_INCLUDED', '##VERSION##');
+    define('USAGEDATA_INCLUDED', '##VERSION##');
 
 	// Register the autoloader
-    require_once __DIR__ . '/autoloader/usage.php';
-	UsageAutoloader::init();
+    require_once __DIR__ . '/autoloader/usagedata.php';
+	UsagedataAutoloader::init();
 }

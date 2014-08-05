@@ -1,17 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="Usage" description="Usage Statistics for Joomla!" default="git" >
+<project name="Usagedata" description="Usage Statistics for Joomla!" default="git" >
 	<property file="./build.properties" />
 
 	<!-- Default properties, set only if not already assigned in the build.properties file -->
 	<property name="dirs.root" value=".." />
-	<property name="dirs.library" value="../usage" />
+	<property name="dirs.library" value="../usagedata" />
 	<property name="dirs.release" value="../release" />
 	<property name="version" value="dev" />
 
 	<property name="dirs.bin" value="bin" />
-	<property name="dirs.bin.libxml" value="${dirs.bin}/libxml" />
-	<property name="dirs.bin.fop" value="${dirs.bin}/fop" />
-	<property name="dirs.bin.dbxsl" value="${dirs.bin}/dbxsl" />
 	<property name="dirs.bin.release" value="../release" />
 	<property name="dirs.documentation" value="../documentation" />
 
@@ -68,8 +65,8 @@
 	<target name="library-package" description="FOF Installation Package for Joomla! 1.6+"
 		depends="new-release,setup-properties">
 
-		<!-- Generate XML file for Usage -->
-		<copy file="./templates/lib_usage.xml" tofile="${dirs.root}/lib_usage.xml" overwrite="true">
+		<!-- Generate XML file for usagedata -->
+		<copy file="./templates/lib_usagedata.xml" tofile="${dirs.root}/lib_usagedata.xml" overwrite="true">
 			<filterchain>
 				<replacetokens begintoken="##" endtoken="##">
 					<token key="DATE" value="${git.date}" />
@@ -77,7 +74,7 @@
 				</replacetokens>
 			</filterchain>
 		</copy>
-		<copy file="${dirs.root}/lib_usage.xml" tofile="${dirs.library}/lib_usage.xml" overwrite="true" />
+		<copy file="${dirs.root}/lib_usagedata.xml" tofile="${dirs.library}/lib_usagedata.xml" overwrite="true" />
 
 		<!-- Generate version.txt file for FOF -->
 		<copy file="./templates/version.txt" tofile="${dirs.library}/version.txt" overwrite="true">
@@ -90,7 +87,7 @@
 		</copy>
 
 
-		<!-- Generate include file for Usage -->
+		<!-- Generate include file for usagedata -->
 		<copy file="./templates/include.php" tofile="${dirs.library}/include.php" overwrite="true">
 			<filterchain>
 				<replacetokens begintoken="##" endtoken="##">
@@ -101,21 +98,21 @@
 		</copy>
 
 		<!-- Create the package -->
-		<zipme basedir="${dirs.library}" prefix="usage/" destfile="${dirs.release}/lib_usage-${version}.zip" includeemptydirs="true">
+		<zipme basedir="${dirs.library}" prefix="usagedata/" destfile="${dirs.release}/lib_usagedata-${version}.zip" includeemptydirs="true">
 			<fileset dir="${dirs.library}" id="library">
 				<include name="**" />
 			</fileset>
 		</zipme>
-		<zipme basedir="${dirs.root}" destfile="${dirs.release}/lib_usage-${version}.zip" includeemptydirs="true">
+		<zipme basedir="${dirs.root}" destfile="${dirs.release}/lib_usagedata-${version}.zip" includeemptydirs="true">
 			<fileset dir="${dirs.root}">
-				<include name="lib_usage.xml" />
+				<include name="lib_usagedata.xml" />
 			</fileset>
 		</zipme>
 
 		<!-- Clean up -->
 		<delete>
 			<fileset dir="${dirs.root}">
-				<include name="lib_usage.xml" />
+				<include name="lib_usagedata.xml" />
 			</fileset>
 		</delete>
 	</target>
