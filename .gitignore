@@ -4,5 +4,8 @@
 /build/tools
 /build/buildlang
 
+release/
+
+usage/lib_usage.xml
 usage/include.php
 usage/version.txt

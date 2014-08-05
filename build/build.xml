@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="Usage" description="Usage Statistics for Joomla!" default="all" >
+<project name="Usage" description="Usage Statistics for Joomla!" default="git" >
 	<property file="./build.properties" />
 
 	<!-- Default properties, set only if not already assigned in the build.properties file -->
