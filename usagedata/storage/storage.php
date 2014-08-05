@@ -20,7 +20,14 @@ class UsagedataStorage
 
     public function load()
     {
-        $this->storage->loadString(file_get_contents($this->path));
+        $raw = '{}';
+
+        if(file_exists($this->path))
+        {
+            $raw = file_get_contents($this->path);
+        }
+
+        $this->storage->loadString($raw);
     }
 
     public function get($path, $default = null)
@@ -42,7 +49,7 @@ class UsagedataStorage
             $json_format_options = JSON_PRETTY_PRINT;
         }
 
-        $string = json_encode($this->storage->toString(), $json_format_options);
+        $string = json_encode($this->storage->toObject(), $json_format_options);
 
         return file_put_contents($this->path, $string);
     }

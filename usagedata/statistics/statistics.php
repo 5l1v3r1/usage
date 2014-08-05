@@ -50,6 +50,7 @@ class UsagedataStatistics
 		$data[] = array('property' => $property, 'value' => $value, 'time' => time());
 
         $this->dataStorage->set('storage', $data);
+        $this->dataStorage->save();
 	}
 
 	/**
@@ -129,7 +130,10 @@ class UsagedataStatistics
                 continue;
             }
 
-			$savedTasks[$task] = time() + ($frequency * 24 * 3600);
+            if(!isset($savedTasks->$task))
+            {
+                $savedTasks->$task = time() + ($frequency * 24 * 3600);
+            }
 		}
 
         $this->metaStorage->set('tasks', $savedTasks);
@@ -294,13 +298,13 @@ class UsagedataStatistics
 		return $result;
 	}
 
-	public static function &getInstance()
+	public static function &getInstance($class)
 	{
 		static $instance = null;
 
 		if(!is_object($instance))
         {
-			$instance = new self;
+			$instance = new $class;
 		}
 
 		return $instance;
